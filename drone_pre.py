@@ -21,7 +21,9 @@ def get_data(path):
 def preprocess(dataframe, limit):
     lst = []
     sum = 0
-    for i in range(1, 53):
+    x = len(dataframe.RF.unique())
+    print(x)
+    for i in range(1, x):
         object_data = dataframe[dataframe['RF'] == i]
         a = object_data.Time.iloc[0]
         object_data.loc[:,'Time'] = object_data.Time - a
@@ -41,12 +43,19 @@ def preprocess(dataframe, limit):
         elif tp > limit:
             object_data = object_data.iloc[:limit,:]
         lst.append(object_data)
-        print(object_data.shape[0])
         
     dataframe = pd.concat(lst)
     return dataframe
 
-if __name__ == '__main__':    
-    path = "WithoutTakeOffdroneall.csv"
+def get_drone_data(path, limit):
     dataframe = get_data(path)
-    dataframe = preprocess(dataframe, 3200)
+    dataframe = preprocess(dataframe, limit)
+    index = dataframe.reset_index().loc[:,['RF']]
+    index = pd.MultiIndex.from_frame(index)
+    data = pd.DataFrame(dataframe.iloc[:,1:].to_numpy(), index = index)
+    return data
+
+if __name__ == '__main__':    
+    path = "data/WithoutTakeoffdroneall.csv"
+    drone_data = get_drone_data(path, 320)
+    air_data = drone_data.to_numpy().reshape((-1, 320, 6))
