@@ -57,5 +57,33 @@ model.compile(loss='mae', optimizer='adam')
 # fit network
 history = model.fit(X_train, Y_train, epochs=50, batch_size=100, validation_data=(X_test, Y_test), verbose=2, shuffle=False)
 
+import math
+from sklearn.metrics import mean_squared_error
+yhat = model.predict(X_test)
+X_test = np.reshape(X_test,(X_test.shape[0],X_test.shape[2]))
+yhat = np.concatenate((yhat,X_test),axis=1)
+print(yhat.shape)
+inv_yhat = scaler.inverse_transform(yhat)
 
+Y_test = np.concatenate((Y_test,X_test),axis=1)
+inv_y = scaler.inverse_transform(Y_test)
+
+d1 = pd.DataFrame(inv_yhat)
+d2 = pd.DataFrame(inv_y)
+
+inv_yhat = d1.iloc[:,:3]
+inv_y = d2.iloc[:,:3]
+
+# calculate RMSE
+rmse = math.sqrt(mean_squared_error(inv_y, inv_yhat))
+#rmse = math.sqrt(mean_squared_error(yhat,Y_test))
+print('Test RMSE: %.3f' % rmse)
+
+
+
+yhat
+
+inv_yhat
+
+d1.iloc[:,3:]
 
