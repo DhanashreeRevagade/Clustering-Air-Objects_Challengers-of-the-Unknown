@@ -50,10 +50,10 @@ def preprocess(dataframe, limit):
 def get_drone_data(path, limit):
     dataframe = get_data(path)
     dataframe = preprocess(dataframe, limit)
-    index = dataframe.reset_index().loc[:,['RF']]
-    index = pd.MultiIndex.from_frame(index)
-    data = pd.DataFrame(dataframe.iloc[:,1:].to_numpy(), index = index)
-    return data
+    # index = dataframe.reset_index().loc[:,['RF']]
+    # index = pd.MultiIndex.from_frame(index)
+    # data = pd.DataFrame(dataframe.iloc[:,1:].to_numpy(), index = index)
+    return dataframe
 
 if __name__ == '__main__':    
     path = "data/WithoutTakeoffdroneall.csv"
